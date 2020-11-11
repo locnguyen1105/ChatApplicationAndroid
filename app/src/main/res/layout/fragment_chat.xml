@@ -6,10 +6,10 @@
     tools:context=".ChatFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Chat"
-        android:textAlignment="center" />
-
+        android:scrollbars="vertical"
+        tools:listitem="@layout/chat_item" />
 </FrameLayout>

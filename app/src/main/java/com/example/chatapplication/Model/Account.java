@@ -19,12 +19,12 @@ public class Account implements Serializable {
     public Account() {
     }
 
-    public String getID() {
+    public String getUid() {
         return Uid;
     }
 
-    public void setID(String ID) {
-        this.Uid = ID;
+    public void setUid(String uid) {
+        Uid = uid;
     }
 
     public Account(String id, String username, String email, String password) {
