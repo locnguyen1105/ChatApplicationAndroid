@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:layoutDescription="@xml/activity_calling_scene"
+    android:id="@+id/motioncalling">
 
     <FrameLayout
-        android:id="@+id/user_call"
+        android:id="@+id/receiver_camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/cardview_dark_background"
@@ -16,26 +17,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <FrameLayout
+        android:id="@+id/usercall"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"
+        android:visibility="gone" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
 
-        >
+        android:layout_centerInParent="true"
+        app:layout_constraintBottom_toBottomOf="@+id/receiver_camera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
         <ImageButton
             android:id="@+id/cancel"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/reject"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/phone_icon" />
 
         <ImageButton
             android:id="@+id/accept"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/phone_icon" />
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
     </LinearLayout>
 
 
-
-</RelativeLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

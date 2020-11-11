@@ -1,9 +1,11 @@
 package com.example.chatapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
@@ -16,7 +18,6 @@ public class Callvideo extends AppCompatActivity {
 
     private ImageButton cancel;
     private FrameLayout usercamera,receivercamera;
-
     private String from , to;
 
     @Override
@@ -26,7 +27,6 @@ public class Callvideo extends AppCompatActivity {
 
         from = getIntent().getStringExtra("from");
         to = getIntent().getStringExtra("to");
-
         cancel = findViewById(R.id.cancel);
 
         usercamera = findViewById(R.id.usercamera);
@@ -41,19 +41,24 @@ public class Callvideo extends AppCompatActivity {
                 }
             }
         });
-
         makeCall();
+
     }
 
     private void makeCall() {
-        stringeeCall = new StringeeCall(Callvideo.this,ChatActivity.stringeeClient,from,to);
+        stringeeCall = new StringeeCall(Callvideo.this,MainActivity.stringeeClient,from,to);
 
         stringeeCall.setVideoCall(true);
 
         stringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
             @Override
             public void onSignalingStateChange(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s, int i, String s1) {
-
+                if(signalingState == StringeeCall.SignalingState.ANSWERED){
+                    ((MotionLayout)findViewById(R.id.motionlayout)).transitionToEnd();
+                    cancel.setVisibility(View.VISIBLE);
+                }else if(signalingState == StringeeCall.SignalingState.ENDED ) {
+                    finish();
+                }
             }
 
             @Override

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@id/start">
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@id/end">
+        <Constraint
+            android:layout_height="20dp"
+            android:layout_width="20dp"/>
+        <Constraint
+            android:layout_height="match_parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="match_parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/receivercamera" />
+        <Constraint
+            android:id="@+id/receivercamera"
+            motion:layout_constraintEnd_toEndOf="@id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/receivercamera"
+            motion:layout_constraintEnd_toEndOf="@id/usercamera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/usercamera"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            motion:layout_constraintBottom_toBottomOf="parent" />
+    </ConstraintSet>
+    <Transition
+        android:id="@+id/call"
+        motion:constraintSetStart="@+id/start"
+        motion:constraintSetEnd="@+id/end" />
+</MotionScene>
