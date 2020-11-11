@@ -45,13 +45,13 @@
             android:visibility="gone" />
 
         <ImageButton
-            android:id="@+id/reject"
+            android:id="@+id/accept"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/phone_icon" />
 
         <ImageButton
-            android:id="@+id/accept"
+            android:id="@+id/reject"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel" />

@@ -29,6 +29,9 @@ public class CallingActivity extends AppCompatActivity {
         accept = findViewById(R.id.accept);
         cancel = findViewById(R.id.cancel);
         reject = findViewById(R.id.reject);
+        receiver = findViewById(R.id.receiver_camera);
+        usercall = findViewById(R.id.usercall);
+
 
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +65,6 @@ public class CallingActivity extends AppCompatActivity {
                 }
             }
         });
-        usercall = findViewById(R.id.usercall);
 
         initAnswer();
 

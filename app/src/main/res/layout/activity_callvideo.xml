@@ -7,6 +7,10 @@
     app:layoutDescription="@xml/activity_callvideo_scene"
     android:id="@+id/motionlayout">
 
+
+
+
+
     <FrameLayout
         android:id="@+id/receivercamera"
         android:layout_width="match_parent"
@@ -15,17 +19,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <ImageButton
-        android:id="@+id/cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/receivercamera"
-        app:layout_constraintEnd_toStartOf="@+id/usercamera" />
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/usercamera"
@@ -39,6 +35,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/receivercamera"
-        app:layout_constraintTop_toTopOf="@+id/receivercamera" />
+        app:layout_constraintTop_toTopOf="@+id/receivercamera" >
+
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:elevation="5dp"/>
+
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
