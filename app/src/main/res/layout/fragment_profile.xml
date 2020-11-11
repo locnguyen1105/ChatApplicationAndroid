@@ -4,56 +4,131 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FDFAFA"
     tools:context=".ProfileFragment">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <RelativeLayout
+            android:id="@+id/parentRela"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="170dp"
                 android:background="#929DEC"></ImageView>
 
             <LinearLayout
+                android:id="@+id/linear"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="150dp"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal"
-                android:layout_marginTop="65dp">
+                android:layout_marginTop="75dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:padding="5dp"
                     android:id="@+id/avatar"
                     android:src="@drawable/anhdepa" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/linear1"
+                android:layout_below="@+id/linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="30dp"
+                    android:text="Nhat Anh"
+                    android:textColor="@color/cardview_dark_background"
+                    android:textStyle="bold"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_below="@+id/linear1"
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingRight="35dp"
+                android:paddingLeft="35dp">
+
+                <LinearLayout
+                    android:id="@+id/linear_child1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:src="@drawable/house" />
+
+                    <TextView
+                        android:id="@+id/address_profile"
+                        android:text="Sống tại Đà Nẵng"
+                        android:textSize="20dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="left"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_child2"
+                    android:layout_below="@+id/linear_child1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:src="@drawable/house" />
+
+                    <TextView
+                        android:id="@+id/email_profile"
+                        android:text="Sống tại Đà Nẵng"
+                        android:textSize="20dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="left"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_below="@+id/linear_child2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:src="@drawable/house" />
+
+                    <TextView
+                        android:id="@+id/phone_profile"
+                        android:text="Sống tại Đà Nẵng"
+                        android:textSize="20dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="left"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
         </RelativeLayout>
-
-    </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/avatar"
-            android:text="Nhat Anh">
-
-        </TextView>
-    </LinearLayout>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

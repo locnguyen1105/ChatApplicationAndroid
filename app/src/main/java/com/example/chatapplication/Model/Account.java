@@ -7,36 +7,87 @@ import java.util.HashMap;
 
 
 public class Account implements Serializable {
-    public String ID;
-    public String Username;
-    public String Email;
-    public String Password;
+    private String Image;
+    private String CoverImage;
+    private String Uid;
+    private String Username;
+    private String Email;
+    private String Password;
+    private String Address;
+    private String Phone;
 
     public Account() {
     }
 
-    public String getID() {
-        return ID;
+    public String getUid() {
+        return Uid;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setUid(String uid) {
+        Uid = uid;
     }
 
     public Account(String id, String username, String email, String password) {
-        ID = id;
+        Uid = id;
         Username = username;
         Email = email;
         Password = password;
     }
 
+    public Account(String image, String coverImage, String ID, String username, String email, String password, String address, String phone) {
+        Image = image;
+        CoverImage = coverImage;
+        this.Uid = ID;
+        Username = username;
+        Email = email;
+        Password = password;
+        Address = address;
+        Phone = phone;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public String getPhone() {
+        return Phone;
+    }
+
+    public void setPhone(String phone) {
+        Phone = phone;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        Image = image;
+    }
+
+    public String getCoverImage() {
+        return CoverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        CoverImage = coverImage;
+    }
+
     @Exclude
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", ID);
+        result.put("Uid", Uid);
         result.put("Username", Username);
         result.put("Email", Email);
         result.put("Password", Password);
+        result.put("Image", "");
+        result.put("CoverImage", "");
+        result.put("Address", "");
+        result.put("Phone", "");
         return result;
     }
 
