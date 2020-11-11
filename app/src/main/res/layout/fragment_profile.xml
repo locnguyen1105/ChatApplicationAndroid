@@ -12,24 +12,52 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/cover_image"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
-                android:background="#929DEC"></ImageView>
+                android:background="#5B5C4C4D"></ImageView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="40dp">
+
+                <TextView
+                    android:id="@+id/btn_edit_cover_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/edit_coverimage_icon"
+                    android:text=" Add cover image"></TextView>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="75dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:padding="5dp"
-                    android:id="@+id/avatar"
-                    android:src="@drawable/anhdepa" />
+                <RelativeLayout
+                    android:id="@+id/linear_pa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:padding="5dp"
+                        android:id="@+id/image"
+                        android:src="@drawable/anhdepa" />
+
+                    <ImageView
+                        android:id="@+id/edit_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="115dp"
+                        android:layout_marginLeft="100dp"
+                        android:src="@drawable/changeimage_icon" />
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -45,6 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textSize="30dp"
+                    android:id="@+id/username"
                     android:text="Nhat Anh"
                     android:textColor="@color/cardview_dark_background"
                     android:textStyle="bold"></TextView>
@@ -68,12 +97,11 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:src="@drawable/house" />
-
+                        android:layout_height="25dp"
+                        android:src="@drawable/address_iconn" />
                     <TextView
                         android:id="@+id/address_profile"
-                        android:text="Sống tại Đà Nẵng"
+                        android:text="Update address"
                         android:textSize="20dp"
                         android:layout_marginStart="8dp"
                         android:layout_gravity="left"
@@ -92,12 +120,12 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:src="@drawable/house" />
+                        android:layout_height="27dp"
+                        android:src="@drawable/mail_icon" />
 
                     <TextView
                         android:id="@+id/email_profile"
-                        android:text="Sống tại Đà Nẵng"
+                        android:text="Email"
                         android:textSize="20dp"
                         android:layout_marginStart="8dp"
                         android:layout_gravity="left"
@@ -115,11 +143,10 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:src="@drawable/house" />
-
+                        android:src="@drawable/phone_icon" />
                     <TextView
                         android:id="@+id/phone_profile"
-                        android:text="Sống tại Đà Nẵng"
+                        android:text="Update number phone"
                         android:textSize="20dp"
                         android:layout_marginStart="8dp"
                         android:layout_gravity="left"
@@ -127,15 +154,12 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
-
         </RelativeLayout>
-
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/edit_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_edit_profile"
+        android:src="@drawable/edit_icon"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"></com.google.android.material.floatingactionbutton.FloatingActionButton>
