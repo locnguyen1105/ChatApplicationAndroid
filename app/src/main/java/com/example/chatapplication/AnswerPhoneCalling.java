@@ -16,7 +16,7 @@ import org.json.JSONObject;
 public class AnswerPhoneCalling extends AppCompatActivity {
     private StringeeCall stringeeCall;
 
-    ImageButton accept , cancel,reject;
+    private ImageButton accept , cancel,reject;
 
 
 
@@ -24,7 +24,7 @@ public class AnswerPhoneCalling extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calling);
+        setContentView(R.layout.activity_answer_phone_calling);
         accept = findViewById(R.id.acceptphonecalling);
         cancel = findViewById(R.id.cancelphonecalling);
         reject = findViewById(R.id.rejectphonecalling);
