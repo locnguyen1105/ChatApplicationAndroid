@@ -43,7 +43,7 @@ public class PhoneCalling extends AppCompatActivity {
             @Override
             public void onSignalingStateChange(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s, int i, String s1) {
                 if(signalingState == StringeeCall.SignalingState.ANSWERED){
-                    ((MotionLayout)findViewById(R.id.motionlayout)).transitionToEnd();
+                    ((MotionLayout)findViewById(R.id.phonecalling)).transitionToEnd();
                 }else if(signalingState == StringeeCall.SignalingState.ENDED ) {
                     finish();
                 }

@@ -47,7 +47,6 @@ public class AnswerPhoneCalling extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stringeeCall.hangup();
                 finish();
             }
         });

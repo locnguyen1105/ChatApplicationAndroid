@@ -194,9 +194,15 @@ public class MainActivity extends AppCompatActivity  {
                     @Override
                     public void run() {
                         callMap.put(stringeeCall.getCallId(),stringeeCall);
-                        Intent intent = new Intent(MainActivity.this,CallingActivity.class);
-                        intent.putExtra("call_id",stringeeCall.getCallId());
-                        startActivity(intent);
+                        if(stringeeCall.isVideoCall()) {
+                            Intent intent = new Intent(MainActivity.this, CallingActivity.class);
+                            intent.putExtra("call_id", stringeeCall.getCallId());
+                            startActivity(intent);
+                        }else {
+                            Intent intent = new Intent(MainActivity.this, AnswerPhoneCalling.class);
+                            intent.putExtra("call_id", stringeeCall.getCallId());
+                            startActivity(intent);
+                        }
                     }
                 });
             }

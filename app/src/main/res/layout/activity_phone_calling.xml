@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/activity_phone_calling_scene"
-    tools:context=".PhoneCalling">
+    tools:context=".PhoneCalling"
+    android:id="@+id/phonecalling">
 
     <ImageView
         android:id="@+id/avatarphone"
