@@ -13,12 +13,11 @@ import com.stringee.common.StringeeConstant;
 
 import org.json.JSONObject;
 
-public class CallingActivity extends AppCompatActivity {
+public class AnswerPhoneCalling extends AppCompatActivity {
     private StringeeCall stringeeCall;
 
     ImageButton accept , cancel,reject;
 
-    FrameLayout usercall,receiver;
 
 
 
@@ -26,11 +25,9 @@ public class CallingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calling);
-        accept = findViewById(R.id.accept);
+        accept = findViewById(R.id.acceptphonecalling);
         cancel = findViewById(R.id.cancelphonecalling);
-        reject = findViewById(R.id.reject);
-        receiver = findViewById(R.id.receiver_camera);
-        usercall = findViewById(R.id.usercall);
+        reject = findViewById(R.id.rejectphonecalling);
 
 
         accept.setOnClickListener(new View.OnClickListener() {
@@ -41,10 +38,7 @@ public class CallingActivity extends AppCompatActivity {
                     cancel.setVisibility(View.VISIBLE);
                     accept.setVisibility(View.GONE);
                     reject.setVisibility(View.GONE);
-                    usercall.setVisibility(View.VISIBLE);
 
-                    ((MotionLayout)findViewById(R.id.motioncalling)).transitionToEnd();
-                    usercall.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -53,6 +47,7 @@ public class CallingActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stringeeCall.hangup();
                 finish();
             }
         });
@@ -73,8 +68,6 @@ public class CallingActivity extends AppCompatActivity {
     private void initAnswer() {
         String callId = getIntent().getStringExtra("call_id");
         stringeeCall = MainActivity.callMap.get(callId);
-        stringeeCall.enableVideo(true);
-        stringeeCall.setQuality(StringeeConstant.QUALITY_FULLHD);
         stringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
             @Override
             public void onSignalingStateChange(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s, int i, String s1) {
@@ -100,24 +93,12 @@ public class CallingActivity extends AppCompatActivity {
 
             @Override
             public void onLocalStream(StringeeCall stringeeCall) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        receiver.addView(stringeeCall.getLocalView());
-                        stringeeCall.renderLocalView(true);
-                    }
-                });
+
             }
 
             @Override
             public void onRemoteStream(StringeeCall stringeeCall) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        usercall.addView(stringeeCall.getRemoteView());
-                        stringeeCall.renderRemoteView(false);
-                    }
-                });
+
             }
 
             @Override
@@ -125,6 +106,7 @@ public class CallingActivity extends AppCompatActivity {
 
             }
         });
-        stringeeCall.initAnswer(CallingActivity.this,MainActivity.stringeeClient);
+        stringeeCall.initAnswer(AnswerPhoneCalling.this,MainActivity.stringeeClient);
     }
+
 }

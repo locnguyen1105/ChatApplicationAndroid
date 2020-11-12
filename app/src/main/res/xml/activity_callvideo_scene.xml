@@ -10,7 +10,7 @@
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintLeft_toLeftOf="parent"
             android:layout_width="wrap_content"
-            android:id="@+id/cancel"
+            android:id="@+id/cancelphonecalling"
             motion:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
@@ -27,7 +27,7 @@
             android:id="@+id/receivercamera" />
         <Constraint
             android:id="@+id/receivercamera"
-            motion:layout_constraintEnd_toEndOf="@id/cancel"
+            motion:layout_constraintEnd_toEndOf="@id/cancelphonecalling"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             motion:layout_constraintBottom_toBottomOf="parent"

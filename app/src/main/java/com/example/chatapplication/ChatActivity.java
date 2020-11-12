@@ -129,6 +129,16 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
                 startActivity(intent);
             }
         });
+        phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this,PhoneCalling.class);
+                intent.putExtra("from",MainActivity.stringeeClient.getUserId());
+                intent.putExtra("to",receiver.getEmail());
+
+                startActivity(intent);
+            }
+        });
     }
 
 

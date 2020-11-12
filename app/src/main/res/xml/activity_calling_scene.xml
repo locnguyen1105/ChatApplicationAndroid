@@ -12,6 +12,15 @@
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Constraint
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Constraint
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">

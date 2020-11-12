@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CallingActivity"></activity>
+        <activity android:name=".AnswerPhoneCalling"></activity>
+        <activity android:name=".PhoneCalling" />
+        <activity android:name=".CallingActivity" />
         <activity android:name=".Callvideo" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".RegisterActivity" />

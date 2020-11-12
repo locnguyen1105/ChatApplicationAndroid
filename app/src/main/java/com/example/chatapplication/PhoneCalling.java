@@ -5,56 +5,45 @@ import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.stringee.call.StringeeCall;
 
 import org.json.JSONObject;
 
-public class Callvideo extends AppCompatActivity {
+public class PhoneCalling extends AppCompatActivity {
     private StringeeCall stringeeCall;
-
-    private ImageButton cancel;
-    private FrameLayout usercamera,receivercamera;
     private String from , to;
+    ImageButton cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_callvideo);
-
-        from = getIntent().getStringExtra("from");
-        to = getIntent().getStringExtra("to");
-        cancel = findViewById(R.id.cancelphonecalling);
-
-        usercamera = findViewById(R.id.usercamera);
-        receivercamera = findViewById(R.id.receivercamera);
-
+        setContentView(R.layout.activity_phone_calling);
+        cancel = findViewById(R.id.cancelphone);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(stringeeCall != null){
-                    stringeeCall.hangup();
-                    finish();
-                }
+                stringeeCall.hangup();
+                finish();
             }
         });
-        makeCall();
 
+        from = getIntent().getStringExtra("from");
+        to = getIntent().getStringExtra("to");
+        makeCall();
     }
 
     private void makeCall() {
-        stringeeCall = new StringeeCall(Callvideo.this,MainActivity.stringeeClient,from,to);
 
-        stringeeCall.setVideoCall(true);
+        stringeeCall = new StringeeCall(PhoneCalling.this,MainActivity.stringeeClient,from,to);
+
 
         stringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
             @Override
             public void onSignalingStateChange(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s, int i, String s1) {
                 if(signalingState == StringeeCall.SignalingState.ANSWERED){
                     ((MotionLayout)findViewById(R.id.motionlayout)).transitionToEnd();
-                    cancel.setVisibility(View.VISIBLE);
                 }else if(signalingState == StringeeCall.SignalingState.ENDED ) {
                     finish();
                 }
@@ -77,24 +66,11 @@ public class Callvideo extends AppCompatActivity {
 
             @Override
             public void onLocalStream(StringeeCall stringeeCall) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        usercamera.addView(stringeeCall.getLocalView());
-                        stringeeCall.renderLocalView(true);
-                    }
-                });
+
             }
 
             @Override
             public void onRemoteStream(StringeeCall stringeeCall) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        receivercamera.addView(stringeeCall.getRemoteView());
-                        stringeeCall.renderRemoteView(false);
-                    }
-                });
             }
 
             @Override
