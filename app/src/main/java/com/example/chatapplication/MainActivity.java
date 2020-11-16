@@ -16,7 +16,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.chatapplication.Model.Account;
 import com.example.chatapplication.Stringee.GenAccessToken;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
 import com.stringee.exception.StringeeError;
@@ -80,8 +80,11 @@ public class MainActivity extends AppCompatActivity  {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     _profilename.setText(ds.child("Username").getValue().toString());
-                    _profileimage.setImageResource(R.drawable.anhdepa);
-                    //Glide.with(MainActivity.this).load().into(_profileimage);
+                    try {
+                        Picasso.get().load(ds.child("Image").getValue().toString()).into(_profileimage);
+                    } catch (Exception e) {
+                        Picasso.get().load(R.drawable.image_default).into(_profileimage);
+                    }
                 }
             }
 

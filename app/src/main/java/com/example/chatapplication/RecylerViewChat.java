@@ -20,10 +20,12 @@ public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHo
     Context mContext;
     OnItemLister lister;
     List<Account> mData = new ArrayList<>();
-    LayoutInflater mInflater;
+    LayoutInflater mInflater = null;
 
-    public RecylerViewChat(Context c, List<Account> data, OnItemLister l){
-        mInflater = LayoutInflater.from(c);
+    public RecylerViewChat(Context c, List<Account> data, OnItemLister l) {
+        if (c != null) {
+            mInflater = LayoutInflater.from(c);
+        }
         mContext = c;
         mData = data;
         lister = l;
