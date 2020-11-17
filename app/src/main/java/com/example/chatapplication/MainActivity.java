@@ -20,13 +20,9 @@ import com.example.chatapplication.Stringee.GenAccessToken;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
 import com.stringee.exception.StringeeError;
@@ -50,6 +46,7 @@ public class MainActivity extends AppCompatActivity  {
     Button _logout;
     TextView _user, _email, _profilename;
     CircleImageView _profileimage;
+
     FirebaseUser firebaseUser;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
@@ -62,37 +59,13 @@ public class MainActivity extends AppCompatActivity  {
         //toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
-
-
-
-        _profileimage = findViewById(R.id.profile_image);
-        _profilename = findViewById(R.id.profile_name);
-
+        getSupportActionBar().setTitle("Chat");
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
         Query query = databaseReference.orderByChild("Email").equalTo(firebaseUser.getEmail());
 
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    _profilename.setText(ds.child("Username").getValue().toString());
-                    try {
-                        Picasso.get().load(ds.child("Image").getValue().toString()).into(_profileimage);
-                    } catch (Exception e) {
-                        Picasso.get().load(R.drawable.image_default).into(_profileimage);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         token = GenAccessToken.genAccessToken(apikey,secret_key,36000,firebaseUser.getEmail());
         initStringee();
         requirePermission();
@@ -104,6 +77,7 @@ public class MainActivity extends AppCompatActivity  {
         FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
         ft1.replace(R.id.content, chatFragment, "");
         ft1.commit();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener selectListioner =
@@ -112,18 +86,21 @@ public class MainActivity extends AppCompatActivity  {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.nav_chat:
+                            getSupportActionBar().setTitle("Chat");
                             ChatFragment chatFragment = new ChatFragment();
                             FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
                             ft1.replace(R.id.content, chatFragment, "");
                             ft1.commit();
                             return true;
                         case R.id.nav_profile:
+                            getSupportActionBar().setTitle("Profile");
                             ProfileFragment profileFragment = new ProfileFragment();
                             FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
                             ft2.replace(R.id.content, profileFragment, "");
                             ft2.commit();
                             return true;
                         case R.id.nav_friend:
+                            getSupportActionBar().setTitle("Users");
                             UsersFragment usersFragment = new UsersFragment();
                             FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
                             ft3.replace(R.id.content, usersFragment, "");
@@ -143,10 +120,11 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

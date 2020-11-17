@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,14 +18,11 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -38,12 +36,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -63,6 +61,8 @@ public class ProfileFragment extends Fragment {
     StorageReference storageReference;
     private static final int IMAGE_CAMERA_REQUEST = 1;
     private static final int IMAGE_GALLERY_REQUEST = 2;
+    private static final int IMAGE_COVER_CAMERA_REQUEST = 3;
+    private static final int IMAGE_COVER_GALLERY_REQUEST = 4;
     private Uri imageUri;
     private StorageTask storageTask;
     String currentPath;
@@ -115,29 +115,38 @@ public class ProfileFragment extends Fragment {
                     } catch (Exception e) {
                         Picasso.get().load(R.drawable.image_default).into(_image);
                     }
+                    try {
+                        Picasso.get().load(ds.child("CoverImage").getValue().toString()).into(_coverImage);
+                    } catch (Exception e) {
+                        Picasso.get().load(R.color.bgCover).into(_coverImage);
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
         //change image
         _editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectImage();
+                selectImage("image");
             }
         });
-
+        //edit_cover
+        _editCoverImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage("coverimage");
+            }
+        });
         //click edit
         _editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                 startActivity(intent);
-
             }
         });
         // Inflate the layout for this fragment
@@ -150,9 +159,9 @@ public class ProfileFragment extends Fragment {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void Upload() {
+    /*private void Upload(String type) {
         final ProgressDialog pd = new ProgressDialog(getContext());
-        pd.setMessage("Uploading");
+        pd.setMessage("Uploading..");
         pd.show();
         if (imageUri != null) {
             if (!storageReference.child(firebaseAuth.getUid()).equals(firebaseAuth.getUid())) {
@@ -176,7 +185,7 @@ public class ProfileFragment extends Fragment {
                         String mUri = downloadUri.toString();
                         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("Image", mUri);
+                        hashMap.put(type, mUri);
                         databaseReference.updateChildren(hashMap);
                         pd.dismiss();
                     } else {
@@ -188,23 +197,38 @@ public class ProfileFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "No Image selected!", Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
-    private void selectImage() {
-        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
+    private void selectImage(String type) {
+        final CharSequence[] options = {"Camera", "Gallery", "Delete Image", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Change Photo!");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo")) {
+                if (options[item].equals("Camera")) {
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.TITLE, "Temp");
+                    imageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePictureIntent, IMAGE_CAMERA_REQUEST);
-                } else if (options[item].equals("Choose from Gallery")) {
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    if (type.equals("image")) {
+                        startActivityForResult(takePictureIntent, IMAGE_CAMERA_REQUEST);
+                    } else {
+                        startActivityForResult(takePictureIntent, IMAGE_COVER_CAMERA_REQUEST);
+                    }
+
+                } else if (options[item].equals("Gallery")) {
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, IMAGE_GALLERY_REQUEST);
+                    if (type.equals("image")) {
+                        startActivityForResult(intent, IMAGE_GALLERY_REQUEST);
+                    } else {
+                        startActivityForResult(intent, IMAGE_COVER_GALLERY_REQUEST);
+                    }
                 } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
+                } else if (options[item].equals("Delete Image")) {
+
                 }
             }
         });
@@ -216,58 +240,71 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
+                imageUri = data.getData();
                 if (requestCode == IMAGE_GALLERY_REQUEST) {
-                    imageUri = data.getData();
-                    if (storageTask != null && storageTask.isInProgress()) {
-                        Toast.makeText(getActivity(), "Upload in process!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Upload();
-                    }
+                    UploadImage("Image");
+                } else if (requestCode == IMAGE_COVER_GALLERY_REQUEST) {
+                    UploadImage("CoverImage");
                 } else if (requestCode == IMAGE_CAMERA_REQUEST) {
-                    thumbnail = (Bitmap) data.getExtras().get("data");
-                    handleUpload(thumbnail);
-
-                  /*  imageUri=data.getData();
-                    Upload();*/
-
-
+                    UploadImage("Image");
+                } else if (requestCode == IMAGE_COVER_CAMERA_REQUEST) {
+                    UploadImage("CoverImage");
                 }
             }
 
         }
-
-
     }
 
-    private void handleUpload(Bitmap thumbnail) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        byte[] s = bytes.toByteArray();
+    //demo
+    private void UploadImage(String type) {
+        final ProgressDialog pd = new ProgressDialog(getContext());
+        pd.setTitle("Uploading Image");
+        pd.show();
+        if (imageUri != null) {
+            if (!storageReference.child(firebaseAuth.getUid()).equals(firebaseAuth.getUid())) {
+                storageReference = storageReference.child(firebaseAuth.getUid());
+            }
+            final StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+            storageTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                    while (!uriTask.isSuccessful()) ;
+                    Uri downLoad = uriTask.getResult();
+                    if (uriTask.isSuccessful()) {
+                        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put(type, downLoad.toString());
+                        databaseReference.updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                pd.dismiss();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                pd.dismiss();
+                            }
+                        });
 
-        if (!storageReference.child(firebaseAuth.getUid()).equals(firebaseAuth.getUid())) {
-            storageReference = storageReference.child(firebaseAuth.getUid());
-        }
-
-        final StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
-        storageTask = fileReference.putBytes(s);
-        storageTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-
+                    } else {
+                        pd.dismiss();
                     }
-                });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    pd.dismiss();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                    pd.setMessage("Progress: " + (int) progressPercent + "%");
+                }
+            });
 
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-
+        }
     }
+
 }
