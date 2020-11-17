@@ -7,15 +7,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.stringee.call.StringeeCall;
 
 import org.json.JSONObject;
+import org.webrtc.CameraVideoCapturer;
 
 public class Callvideo extends AppCompatActivity {
     private StringeeCall stringeeCall;
 
-    private ImageButton cancel;
+    private ImageButton cancel,onmic,offmic,onvolume,offvolume;
     private FrameLayout usercamera,receivercamera;
     private String from , to;
 
@@ -27,6 +29,47 @@ public class Callvideo extends AppCompatActivity {
         from = getIntent().getStringExtra("from");
         to = getIntent().getStringExtra("to");
         cancel = findViewById(R.id.cancelphonecalling);
+        onmic = findViewById(R.id.onmic);
+        offmic = findViewById(R.id.onmic);
+        onvolume = findViewById(R.id.onmic);
+        offvolume = findViewById(R.id.onmic);
+
+        offmic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stringeeCall.mute(true);
+                onmic.setVisibility(View.VISIBLE);
+                offmic.setVisibility(View.GONE);
+            }
+        });
+
+        onmic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stringeeCall.mute(false);
+                offmic.setVisibility(View.VISIBLE);
+                onmic.setVisibility(View.GONE);
+            }
+        });
+
+        offvolume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stringeeCall.setSpeakerphoneOn(false);
+                onvolume.setVisibility(View.VISIBLE);
+                offvolume.setVisibility(View.GONE);
+            }
+        });
+
+        onvolume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stringeeCall.setSpeakerphoneOn(true);
+                onvolume.setVisibility(View.GONE);
+                offvolume.setVisibility(View.VISIBLE);
+            }
+        });
+
 
         usercamera = findViewById(R.id.usercamera);
         receivercamera = findViewById(R.id.receivercamera);
@@ -38,6 +81,23 @@ public class Callvideo extends AppCompatActivity {
                     stringeeCall.hangup();
                     finish();
                 }
+            }
+        });
+
+        usercamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stringeeCall.switchCamera(new CameraVideoCapturer.CameraSwitchHandler() {
+                    @Override
+                    public void onCameraSwitchDone(boolean b) {
+
+                    }
+
+                    @Override
+                    public void onCameraSwitchError(String s) {
+                        Toast.makeText(Callvideo.this,"error switching camera",Toast.LENGTH_LONG);
+                    }
+                });
             }
         });
         makeCall();

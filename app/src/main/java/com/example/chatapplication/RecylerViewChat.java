@@ -1,6 +1,7 @@
 package com.example.chatapplication;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,18 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapplication.Model.Account;
+import com.example.chatapplication.Model.Chat;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.stringee.messaging.User;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHolder>  {
@@ -21,6 +32,11 @@ public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHo
     OnItemLister lister;
     List<Account> mData = new ArrayList<>();
     LayoutInflater mInflater = null;
+    private DatabaseReference databaseReference;
+    FirebaseUser s;
+    Chat chat_tmp = new Chat();
+    List<Chat> list_chat;
+
 
     public RecylerViewChat(Context c, List<Account> data, OnItemLister l) {
         if (c != null) {
@@ -40,9 +56,10 @@ public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Account mCurrent = mData.get(position);
+        s = FirebaseAuth.getInstance().getCurrentUser();
+        readMessages(s.getUid(),mCurrent.getUid(),"",holder);
         holder.setIsRecyclable(false);
         holder.txt_name.setText(String.valueOf(mCurrent.getUsername()));
-        holder.txt_description.setText(String.valueOf(mCurrent.getEmail()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,4 +91,51 @@ public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHo
     interface OnItemLister {
         void onListViewClick(Account account);
     }
+
+        private void readMessages(final String myid, final String userid, String imageurl,@NonNull ViewHolder holder){
+        list_chat = new ArrayList<Chat>();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list_chat.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Chat chat = dataSnapshot.getValue(Chat.class);
+                    if(chat.getReceiver().equals(myid) && chat.getSender().equals(userid)||
+                            chat.getReceiver().equals(userid) && chat.getSender().equals(myid)){
+                        list_chat.add(chat);
+                    }
+                }
+                int i = 0;
+                for (Chat chat2 : list_chat) {
+                    Log.e("chat : ",chat2.getMessage());
+                    if (i == 0) {
+                        chat_tmp.setMessage(chat2.getMessage());
+                        chat_tmp.setDate(chat2.getDate());
+                        chat_tmp.setReceiver(chat2.getReceiver());
+                        chat_tmp.setSender(chat2.getSender());
+                        i++;
+                    }
+                    if (chat2.getReceiver().equals(myid) && chat2.getSender().equals(userid) ||
+                            chat2.getReceiver().equals(userid) && chat2.getSender().equals(myid)) {
+                        if (chat_tmp.getDate() < chat2.getDate()) {
+                            chat_tmp.setMessage(chat2.getMessage());
+                            chat_tmp.setDate(chat2.getDate());
+                            chat_tmp.setReceiver(chat2.getReceiver());
+                            chat_tmp.setSender(chat2.getSender());
+                        }
+                    }
+                }
+                holder.txt_description.setText(chat_tmp.getMessage());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

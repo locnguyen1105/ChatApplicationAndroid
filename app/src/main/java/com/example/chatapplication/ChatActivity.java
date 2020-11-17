@@ -36,6 +36,8 @@ import com.stringee.listener.StringeeConnectionListener;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +75,7 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
         recyclerView = findViewById(R.id.recyclerViewChat);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         setSupportActionBar(toolbar);
@@ -84,6 +87,7 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
                 String msg = editText.getText().toString();
                 if(!"".equals(msg)){
                     sendMessage(firebaseUser.getUid(),receiver.getUid(),msg);
+                    editText.setText("");
                 }else{
 
                 }
@@ -150,6 +154,7 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
         hashMap.put("sender",sender);
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
+        hashMap.put("date",System.currentTimeMillis());
 
         databaseReference.child("Chats").push().setValue(hashMap);
     }
