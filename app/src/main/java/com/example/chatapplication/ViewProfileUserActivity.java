@@ -254,6 +254,8 @@ public class ViewProfileUserActivity extends AppCompatActivity {
                                                                                 public void onSuccess(Void aVoid) {
                                                                                     btn_add.setEnabled(true);
                                                                                     current_state = "not_friends";
+                                                                                    Drawable image = (Drawable) getResources().getDrawable(R.drawable.border_btn);
+                                                                                    btn_add.setBackground(image);
                                                                                     btn_add.setText("Send Friend Request");
                                                                                 }
                                                                             });

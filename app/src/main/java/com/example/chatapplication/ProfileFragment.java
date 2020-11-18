@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.chatapplication.Model.Account;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -42,7 +43,9 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -67,6 +70,9 @@ public class ProfileFragment extends Fragment {
     private StorageTask storageTask;
     String currentPath;
     Bitmap thumbnail;
+    String uriImage;
+    String uriCoverImage;
+    Account accountas;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,36 +96,47 @@ public class ProfileFragment extends Fragment {
         databaseReference = firebaseDatabase.getReference("Users");
         storageReference = FirebaseStorage.getInstance().getReference("Uploads");
 
-        Query query = databaseReference.orderByChild("Email").equalTo(firebaseUser.getEmail());
+
+        uriImage = "notimage";
+        uriCoverImage = "notcoverimage";
         //get data
+        Query query = databaseReference.orderByChild("Email").equalTo(firebaseUser.getEmail());
+        final ProgressDialog pd = new ProgressDialog(getContext());
+        pd.setTitle("Loading...");
+        pd.show();
+
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
-                    _username.setText(ds.child("Username").getValue().toString());
+
+                    accountas = new Account(ds.child("Image").getValue().toString(), ds.child("CoverImage").getValue().toString(), ds.child("Username").getValue().toString(), ds.child("Email").getValue().toString(), ds.child("Address").getValue().toString(), ds.child("Phone").getValue().toString());
+
+                    _username.setText(accountas.getUsername());
                     //_coverImage.setImageResource(R.drawable.);
-                    _email.setText(ds.child("Email").getValue().toString());
-                    if (TextUtils.isEmpty(ds.child("Address").getValue().toString())) {
+                    _email.setText(accountas.getEmail());
+                    if (TextUtils.isEmpty(accountas.getAddress())) {
                         _address.setText("Cập nhật");
                     } else {
-                        _address.setText(ds.child("Address").getValue().toString());
+                        _address.setText(accountas.getAddress());
                     }
-
-                    if (TextUtils.isEmpty(ds.child("Phone").getValue().toString())) {
+                    if (TextUtils.isEmpty(accountas.getPhone())) {
                         _phone.setText("Cập nhật");
                     } else {
-                        _phone.setText(ds.child("Phone").getValue().toString());
+                        _phone.setText(accountas.getPhone());
                     }
                     try {
-                        Picasso.get().load(ds.child("Image").getValue().toString()).into(_image);
+                        Picasso.get().load(accountas.getImage()).into(_image);
                     } catch (Exception e) {
                         Picasso.get().load(R.drawable.image_default).into(_image);
                     }
                     try {
-                        Picasso.get().load(ds.child("CoverImage").getValue().toString()).into(_coverImage);
+                        Picasso.get().load(accountas.getCoverImage()).into(_coverImage);
                     } catch (Exception e) {
                         Picasso.get().load(R.color.bgCover).into(_coverImage);
                     }
+
+                    pd.dismiss();
                 }
             }
 
@@ -127,18 +144,20 @@ public class ProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+
         //change image
         _editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectImage("image");
+                selectImage("Image");
             }
         });
         //edit_cover
         _editCoverImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectImage("coverimage");
+                selectImage("CoverImage");
             }
         });
         //click edit
@@ -151,6 +170,18 @@ public class ProfileFragment extends Fragment {
         });
         // Inflate the layout for this fragment
         return v;
+    }
+
+    public List<Account> getList() {
+        List<Account> listAcc = new ArrayList<>();
+
+        return listAcc;
+
+    }
+
+    public void displayProfile(List<Account> acc) {
+
+
     }
 
     private String getFileExtension(Uri uri) {
@@ -212,7 +243,7 @@ public class ProfileFragment extends Fragment {
                     imageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    if (type.equals("image")) {
+                    if (type.equals("Image")) {
                         startActivityForResult(takePictureIntent, IMAGE_CAMERA_REQUEST);
                     } else {
                         startActivityForResult(takePictureIntent, IMAGE_COVER_CAMERA_REQUEST);
@@ -220,7 +251,7 @@ public class ProfileFragment extends Fragment {
 
                 } else if (options[item].equals("Gallery")) {
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    if (type.equals("image")) {
+                    if (type.equals("Image")) {
                         startActivityForResult(intent, IMAGE_GALLERY_REQUEST);
                     } else {
                         startActivityForResult(intent, IMAGE_COVER_GALLERY_REQUEST);
@@ -228,6 +259,29 @@ public class ProfileFragment extends Fragment {
                 } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
                 } else if (options[item].equals("Delete Image")) {
+                    final ProgressDialog pd = new ProgressDialog(getContext());
+                    pd.setTitle("Delete Image");
+                    pd.show();
+                    databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    if (type.equals("CoverImage")) {
+                        hashMap.put(type, "");
+
+                    } else {
+                        hashMap.put(type, "");
+                    }
+                    databaseReference.updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            pd.dismiss();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            pd.dismiss();
+                        }
+                    });
+
 
                 }
             }

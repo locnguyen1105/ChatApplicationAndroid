@@ -33,6 +33,7 @@ public class Account implements Serializable {
         Email = email;
         Password = password;
     }
+
     public Account(String image, String coverImage, String ID, String username, String email, String password, String address, String phone) {
         Image = image;
         CoverImage = coverImage;
@@ -40,6 +41,15 @@ public class Account implements Serializable {
         Username = username;
         Email = email;
         Password = password;
+        Address = address;
+        Phone = phone;
+    }
+
+    public Account(String image, String coverImage, String username, String email, String address, String phone) {
+        Image = image;
+        CoverImage = coverImage;
+        Username = username;
+        Email = email;
         Address = address;
         Phone = phone;
     }
