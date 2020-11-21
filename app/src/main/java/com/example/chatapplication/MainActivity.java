@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -17,15 +18,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.chatapplication.Stringee.GenAccessToken;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
 import com.stringee.exception.StringeeError;
+import com.stringee.listener.StatusListener;
 import com.stringee.listener.StringeeConnectionListener;
 
 import org.json.JSONObject;
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity  {
 
     public static StringeeClient stringeeClient;
     public static Map<String,StringeeCall> callMap = new HashMap<>();
+    private String firebaseToken;
 
     private String token ;
     Button _logout;
@@ -64,6 +70,7 @@ public class MainActivity extends AppCompatActivity  {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
+
         Query query = databaseReference.orderByChild("Email").equalTo(firebaseUser.getEmail());
 
         token = GenAccessToken.genAccessToken(apikey,secret_key,36000,firebaseUser.getEmail());
@@ -163,6 +170,27 @@ public class MainActivity extends AppCompatActivity  {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        firebaseToken = FirebaseInstanceId.getInstance().getToken();
+                        Log.e("REGISTER TOKEN",firebaseToken);
+                        Log.e("StringeeClient",stringeeClient.getUserId());
+
+                        stringeeClient.registerPushToken(firebaseToken, new StatusListener() {
+                            @Override
+                            public void onSuccess() {
+                                Log.e("REGISTER TOKEN",firebaseToken);
+                                Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(StringeeError stringeeError) {
+                                Toast.makeText(MainActivity.this, "Register error: " + stringeeError.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onProgress(int i) {
+                                super.onProgress(i);
+                            }
+                        });
 
                     }
                 });

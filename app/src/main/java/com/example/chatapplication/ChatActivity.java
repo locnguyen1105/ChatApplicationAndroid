@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
 import com.stringee.exception.StringeeError;
@@ -41,10 +42,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 //GenAccessToken.genAccessToken("SKfbWu6u2A8CfUckQZDNlbLC9TKvTa5oU", "TzNCaAlJac3NWUVROd2ZPNE9PTEc1Mk9iZVI0QW5NQ0E=", 360000)
 public class ChatActivity extends AppCompatActivity implements RecylerViewMessage.OnItemLister {
-
-    private ImageView imageView,phone,camera;
+    private CircleImageView imageView;
+    private ImageView phone,camera;
     private TextView textView;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
@@ -111,6 +115,11 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 receiver = snapshot.getValue(Account.class);
                 textView.setText(receiver.getUsername());
+                try {
+                    Picasso.get().load(receiver.getImage()).into(imageView);
+                } catch (Exception e) {
+                    Picasso.get().load(R.drawable.image_default).into(imageView);
+                }
 
                 readMessages(firebaseUser.getUid(),receiver.getUid(),null);
 

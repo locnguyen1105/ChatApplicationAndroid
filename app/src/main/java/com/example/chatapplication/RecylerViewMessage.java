@@ -1,6 +1,7 @@
 package com.example.chatapplication;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,17 @@ import com.example.chatapplication.Model.Account;
 import com.example.chatapplication.Model.Chat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecylerViewMessage extends RecyclerView.Adapter<RecylerViewMessage.ViewHolder> {
     Context mContext;
@@ -52,6 +61,27 @@ public class RecylerViewMessage extends RecyclerView.Adapter<RecylerViewMessage.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Chat mCurrent = mData.get(position);
         holder.setIsRecyclable(false);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Account acc = ds.getValue(Account.class);
+                        if(acc.getUid().equals(mCurrent.getSender())) {
+                            try {
+                                Picasso.get().load(acc.getImage()).into(holder.image);
+                            } catch (Exception e) {
+                                Picasso.get().load(R.drawable.image_default).into(holder.image);
+                            }
+                        }
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 //        holder.image.setText(String.valueOf(mCurrent.getUsername()));
         holder.show_message.setText(String.valueOf(mCurrent.getMessage()));
 //        holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +98,7 @@ public class RecylerViewMessage extends RecyclerView.Adapter<RecylerViewMessage.
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView image;
+        CircleImageView image;
         TextView show_message;
         RecylerViewMessage recylerV;
         CardView cardView;

@@ -29,7 +29,9 @@ import java.util.List;
 public class ChatFragment extends Fragment implements RecylerViewChat.OnItemLister {
     private RecyclerView lv;
     private List<Account> list_acc;
+    private List<Account> list_real;
     private RecylerViewChat adapter;
+    private DatabaseReference mFriendDatabase;
 
     public ChatFragment() {
     }
@@ -42,6 +44,7 @@ public class ChatFragment extends Fragment implements RecylerViewChat.OnItemList
         lv = view.findViewById(R.id.recyclerView2);
         lv.setLayoutManager(new LinearLayoutManager(getActivity()));
         list_acc = new ArrayList<Account>();
+        list_real = new ArrayList<>();
         readUsers();
         return view;
     }
@@ -49,21 +52,41 @@ public class ChatFragment extends Fragment implements RecylerViewChat.OnItemList
     private void readUsers(){
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
+
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list_acc.clear();
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                    Log.e("user",firebaseUser.getUid());
                     Account acc = snapshot1.getValue(Account.class);
                     assert acc != null;
                     assert firebaseUser != null;
                     if(!firebaseUser.getUid().equals(acc.getUid())){
-                        list_acc.add(acc);
+                           list_acc.add(acc);
                     }
+
+                    Log.e("user",firebaseUser.getUid());
                 }
-                adapter = new RecylerViewChat(getActivity(), list_acc, ChatFragment.this);
-                lv.setAdapter(adapter);
+                mFriendDatabase.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        list_real.clear();
+                        for(Account acc : list_acc){
+                            if(snapshot.hasChild(acc.getUid())){
+                                list_real.add(acc);
+                            }
+                        }
+                        System.out.println(list_real);
+                        adapter = new RecylerViewChat(getActivity(), list_real, ChatFragment.this);
+                        lv.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -71,6 +94,7 @@ public class ChatFragment extends Fragment implements RecylerViewChat.OnItemList
                 Log.e("Error : ", String.valueOf(error));
             }
         });
+
     }
 
     @Override

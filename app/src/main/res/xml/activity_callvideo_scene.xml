@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto"
+    xmlns:app="urn:oasis:names:tc:xliff:document:1.2">
+
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
@@ -48,8 +51,45 @@
             android:layout_height="200dp"
             motion:layout_constraintBottom_toBottomOf="parent" />
     </ConstraintSet>
+
+
+<!--    <ConstraintSet android:id="@+id/swipe">-->
+<!--        <Constraint-->
+<!--            android:id="@+id/usercamera"-->
+<!--            motion:layout_constraintTop_toTopOf="parent"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="200dp"-->
+<!--            motion:layout_constraintRight_toRightOf="parent" />-->
+<!--    </ConstraintSet>-->
+
     <Transition
         android:id="@+id/call"
         motion:constraintSetStart="@+id/start"
-        motion:constraintSetEnd="@+id/end" />
+        motion:constraintSetEnd="@+id/end" >
+        <OnSwipe motion:touchAnchorId="@+id/usercamera" />
+    </Transition>
+
+<!--    <Transition-->
+<!--        android:id="@+id/swipeanimation"-->
+<!--        motion:constraintSetEnd="@+id/swipe"-->
+<!--        motion:constraintSetStart="@+id/end"-->
+<!--        motion:duration="1000"-->
+<!--        motion:autoTransition="animateToEnd"-->
+<!--        motion:layoutDuringTransition="ignoreRequest"-->
+<!--        >-->
+<!--        <KeyFrameSet>-->
+
+<!--        </KeyFrameSet>-->
+<!--        <OnSwipe motion:dragDirection="dragUp" motion:onTouchUp="autoCompleteToStart" />-->
+
+<!--    </Transition>-->
+
+
+
+
+
+
+
+<!--    <StateSet app:defaultState="@id/start"-->
+<!--        xmlns:app="http://schemas.android.com/apk/res-auto" />-->
 </MotionScene>

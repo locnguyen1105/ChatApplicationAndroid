@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -22,6 +24,8 @@ public class CallingActivity extends AppCompatActivity {
 
     FrameLayout usercall,receiver;
 
+    MotionLayout motionLayout;
+
 
 
     @Override
@@ -37,6 +41,7 @@ public class CallingActivity extends AppCompatActivity {
         offmic = findViewById(R.id.onmic);
         onvolume = findViewById(R.id.onmic);
         offvolume = findViewById(R.id.onmic);
+        motionLayout = findViewById(R.id.motioncalling);
 
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,9 +54,106 @@ public class CallingActivity extends AppCompatActivity {
                     offmic.setVisibility(View.VISIBLE);
                     offvolume.setVisibility(View.VISIBLE);
                     usercall.setVisibility(View.VISIBLE);
-
+                    ((MotionLayout)findViewById(R.id.motioncalling)).setTransition(R.id.start, R.id.end);
                     ((MotionLayout)findViewById(R.id.motioncalling)).transitionToEnd();
                     usercall.setVisibility(View.VISIBLE);
+
+                    receiver.setOnTouchListener(new View.OnTouchListener()  {
+                        float dX, dY;
+                        @Override
+                        public boolean onTouch(View view, MotionEvent event) {
+
+                            switch (event.getAction()) {
+                                case MotionEvent.ACTION_CANCEL: {
+                                    break;
+                                }
+                                case MotionEvent.ACTION_DOWN: {
+
+                                    dX = view.getX() - event.getRawX();
+                                    dY = view.getY() - event.getRawY();
+                                    break;
+                                }
+
+                                case MotionEvent.ACTION_MOVE: {
+                                    view.animate()
+                                            .x(event.getRawX() + dX)
+                                            .y(event.getRawY() + dY)
+                                            .setDuration(0)
+                                            .start();
+                                    break;
+                                }
+                                case MotionEvent.ACTION_UP:{
+                                    if(view.getX() < 0 && view.getY() + view.getHeight() > motionLayout.getHeight()){
+                                        view.animate()
+                                                .x(0)
+                                                .y(motionLayout.getHeight() - view.getHeight())
+                                                .setDuration(200)
+                                                .start();
+                                    }else if (view.getX() + view.getWidth() > motionLayout.getWidth() && view.getY() + view.getHeight() > motionLayout.getHeight()){
+                                        view.animate()
+                                                .x(motionLayout.getWidth() - view.getWidth())
+                                                .y(motionLayout.getHeight() - view.getHeight())
+                                                .setDuration(200)
+                                                .start();
+                                    }else if(view.getX() < 0 && view.getY() < 0){
+                                        view.animate()
+                                                .x(0)
+                                                .y(0)
+                                                .setDuration(200)
+                                                .start();
+                                    }else if(view.getX() + view.getWidth() > motionLayout.getWidth() && view.getY() < 0 ){
+                                        view.animate()
+                                                .x(motionLayout.getWidth() - view.getWidth())
+                                                .y(0)
+                                                .setDuration(200)
+                                                .start();
+                                    }else if(view.getX() < 0) {
+                                        view.animate()
+                                                .x(0)
+                                                .y(event.getRawY() + dY)
+                                                .setDuration(200)
+                                                .start();
+                                    }else if(view.getX() + view.getWidth() > motionLayout.getWidth()) {
+                                        view.animate()
+                                                .x(motionLayout.getWidth() - view.getWidth())
+                                                .y(event.getRawY() + dY)
+                                                .setDuration(200)
+                                                .start();
+                                    }else if (view.getY() < 0){
+                                        view.animate()
+                                                .x(event.getRawX() + dX)
+                                                .y(0)
+                                                .setDuration(200)
+                                                .start();
+                                    }else if (view.getY() + view.getHeight() > motionLayout.getHeight()){
+                                        view.animate()
+                                                .x(event.getRawX() + dX)
+                                                .y(motionLayout.getHeight() - view.getHeight())
+                                                .setDuration(200)
+                                                .start();
+                                    }else {
+                                        float calculateX = view.getX() + view.getWidth()/2;
+                                        if( calculateX < motionLayout.getWidth()/2 ){
+                                            view.animate()
+                                                    .x(0)
+                                                    .y(event.getRawY() + dY)
+                                                    .setDuration(200)
+                                                    .start();
+                                        }else if (calculateX > motionLayout.getWidth()/2 )  {
+                                            view.animate()
+                                                    .x(motionLayout.getWidth() - view.getWidth())
+                                                    .y(event.getRawY() + dY)
+                                                    .setDuration(200)
+                                                    .start();
+                                        }
+                                    }
+                                }
+                                default:
+                                    return false;
+                            }
+                            return true;
+                        }
+                    });
                 }
 
             }
@@ -123,6 +225,7 @@ public class CallingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(stringeeCall != null) {
                     stringeeCall.reject();
+                    finish();
                 }
             }
         });

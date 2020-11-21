@@ -21,11 +21,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.stringee.messaging.User;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHolder>  {
     Context mContext;
@@ -59,6 +62,11 @@ public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHo
         s = FirebaseAuth.getInstance().getCurrentUser();
         readMessages(s.getUid(),mCurrent.getUid(),"",holder);
         holder.setIsRecyclable(false);
+        try {
+            Picasso.get().load(mCurrent.getImage()).into(holder.imageView);
+        } catch (Exception e) {
+            Picasso.get().load(R.drawable.image_default).into(holder.imageView);
+        }
         holder.txt_name.setText(String.valueOf(mCurrent.getUsername()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +82,7 @@ public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHo
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-            ImageView imageView;
+            CircleImageView imageView;
             TextView txt_name, txt_description;
             RecylerViewChat recylerV;
             CardView cardView;
@@ -119,11 +127,14 @@ public class RecylerViewChat extends RecyclerView.Adapter<RecylerViewChat.ViewHo
                     }
                     if (chat2.getReceiver().equals(myid) && chat2.getSender().equals(userid) ||
                             chat2.getReceiver().equals(userid) && chat2.getSender().equals(myid)) {
-                        if (chat_tmp.getDate() < chat2.getDate()) {
-                            chat_tmp.setMessage(chat2.getMessage());
-                            chat_tmp.setDate(chat2.getDate());
-                            chat_tmp.setReceiver(chat2.getReceiver());
-                            chat_tmp.setSender(chat2.getSender());
+                        if(chat2 != null) {
+                            System.out.println(chat_tmp.getDate());
+                            if (chat_tmp.getDate() < chat2.getDate()) {
+                                chat_tmp.setMessage(chat2.getMessage());
+                                chat_tmp.setDate(chat2.getDate());
+                                chat_tmp.setReceiver(chat2.getReceiver());
+                                chat_tmp.setSender(chat2.getSender());
+                            }
                         }
                     }
                 }

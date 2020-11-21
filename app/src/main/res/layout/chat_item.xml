@@ -25,16 +25,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="10dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/anhdepa"
-                android:background="@drawable/rounded_image"/>
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="20dp"
+                />
 
             <LinearLayout
                 android:id="@+id/containcontent"
@@ -49,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:text="Name of you"
                     android:singleLine="true"
-                    android:textSize="30sp" />
+                    android:textSize="25sp" />
 
                 <TextView
                     android:id="@+id/description"
