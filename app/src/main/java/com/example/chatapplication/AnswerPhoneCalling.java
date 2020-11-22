@@ -49,7 +49,7 @@ public class AnswerPhoneCalling extends AppCompatActivity {
 
 
 
-        avatarphone = findViewById(R.id.avatarphone);
+        avatarphone = findViewById(R.id.imageView2);
         String callId = getIntent().getStringExtra("call_id");
         stringeeCall = MainActivity.callMap.get(callId);
 

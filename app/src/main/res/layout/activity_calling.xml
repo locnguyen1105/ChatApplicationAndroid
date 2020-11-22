@@ -61,9 +61,12 @@
 
         <ImageButton
             android:id="@+id/cancelphonecalling"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_acceptphone"
+            android:background="@drawable/btn_endcall"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:visibility="gone" />
 
         <ImageButton
@@ -88,7 +91,7 @@
 
 
         <ImageButton
-            android:id="@+id/accept"
+            android:id="@+id/reject"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:background="@drawable/btn_endcall"
@@ -96,7 +99,7 @@
             android:layout_marginBottom="10dp"/>
 
         <ImageButton
-            android:id="@+id/reject"
+            android:id="@+id/accept"
             android:layout_marginLeft="20dp"
             android:layout_width="80dp"
             android:layout_height="80dp"

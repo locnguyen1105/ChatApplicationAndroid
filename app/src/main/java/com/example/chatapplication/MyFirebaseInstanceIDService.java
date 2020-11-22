@@ -49,10 +49,20 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
                 try {
                     JSONObject jsonObject= new JSONObject(data);
                     Log.e("DEBUG","MESSAGE REMOTE :" + remoteMessage.getData());
-                    String callStatus = jsonObject.getString("callStatus");
-                    if(callStatus != null && callStatus.equals("started")){
-                        showNotification();
+                    if(jsonObject.has("callStatus")){
+                        String callStatus = jsonObject.getString("callStatus");
+                        if(callStatus != null && callStatus.equals("started")){
+                            showNotification();
+                        }
+                    }else {
+                        JSONObject form = jsonObject.getJSONObject("message");
+                        String content = form.getString("content");
+                        String mail = jsonObject.getString("from");
+                        if(content != null ){
+                            sendNotification(content,mail);
+                        }
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -61,18 +71,17 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
         }else {
 
             Log.e("FIREBASEMESS","Mess");
-            sendNotification(remoteMessage.getNotification().getBody());
 
         }
 
         super.onMessageReceived(remoteMessage);
     }
 
-    private void sendNotification(String messageBody) {
+    private void sendNotification(String messageBody,String mail) {
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = getString(R.string.project_id);
 
@@ -81,12 +90,12 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_icon)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background))
-                        .setContentTitle(getString(R.string.project_id))
+                        .setContentTitle(mail + " send a message : ")
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent)
                         .setDefaults(Notification.DEFAULT_ALL)
-                        .setPriority(NotificationManager.IMPORTANCE_HIGH);
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -96,7 +105,7 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
             NotificationChannel channel = new NotificationChannel(
                     channelId,
                     "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_HIGH);
 
             notificationManager.createNotificationChannel(channel);
         }

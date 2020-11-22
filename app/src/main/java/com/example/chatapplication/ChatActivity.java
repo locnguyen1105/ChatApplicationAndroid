@@ -193,6 +193,12 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
         options.setDistinct(true);
         stringeeClient = MainActivity.stringeeClient;
 
+//        Message message = (Message)stringeeChange.getObject();
+//        message.markAsRead(stringeeClient, new StatusListener() {
+//            @Override
+//            public void onSuccess() {
+//            }
+//        });
 
     }
 

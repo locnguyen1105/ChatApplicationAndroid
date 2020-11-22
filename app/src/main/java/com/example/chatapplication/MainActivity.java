@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity  {
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    public static StringeeChange stringeeChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +93,8 @@ public class MainActivity extends AppCompatActivity  {
 
                         // Log and toast
                         //String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d("TAG", token);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                        //Log.d("TAG", token);
+                        //Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -271,6 +272,7 @@ public class MainActivity extends AppCompatActivity  {
             public void onChangeEvent(StringeeChange stringeeChange) {
                 if (stringeeChange.getObjectType() == Message.Type.MESSAGE){
                         Log.e("CHANGE ORCUR","STRINGEE");
+
                 }
             }
         });

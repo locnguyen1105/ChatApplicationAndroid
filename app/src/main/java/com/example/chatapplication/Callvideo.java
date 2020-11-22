@@ -86,7 +86,6 @@ public class Callvideo extends AppCompatActivity implements GestureDetector.OnGe
         offmic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("sssssssss");
                 stringeeCall.mute(true);
                 onmic.setVisibility(View.VISIBLE);
                 offmic.setVisibility(View.GONE);
