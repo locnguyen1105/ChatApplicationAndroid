@@ -102,6 +102,7 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
                 stringeeClient.createConversation( userList, options, new CallbackListener<Conversation>() {
                     @Override
                     public void onSuccess(Conversation conversation) {
+                        Conversation conversation1 = new Conversation();
                         Message message = new Message(msg);
                         conversation.sendMessage(stringeeClient, message, new StatusListener() {
                             @Override
@@ -109,6 +110,7 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
                                 if(!"".equals(msg)){
                                     sendMessage(firebaseUser.getUid(),receiver.getUid(),msg);
                                     editText.setText("");
+                                    Log.e("CONVERSTATION : ",conversation.getLastMsg());
                                 }else{
 
                                 }
@@ -141,6 +143,11 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
                 } catch (Exception e) {
                     Picasso.get().load(R.drawable.image_default).into(imageView);
                 }
+                User user = new User(receiver.getEmail());
+                user.setName(receiver.getUsername());
+                user.setAvatarUrl(receiver.getImage());
+                user.setRole("member");
+                userList.add(user);
 
                 readMessages(firebaseUser.getUid(),receiver.getUid(),null);
 
@@ -177,29 +184,14 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
         // string ee chat
         stringeeClient = MainActivity.stringeeClient;
 
-        stringeeClient.getLocalConversations(acc_id, new CallbackListener<List<Conversation>>() {
-            @Override
-            public void onSuccess(final List<Conversation> conversations) {
-                System.out.println(conversations);
-            }
-        });
-
-
         //Stringee
-        for(Account acc : ChatFragment.list_real){
-            User user = new User(acc.getUid());
-            user.setName(acc.getUsername());
-            user.setAvatarUrl(acc.getImage());
-            user.setRole("member");
-            userList.add(user);
-        }
+
 
         options = new ConversationOptions();
         options.setName("Chat App");
         options.setGroup(false);
         options.setDistinct(true);
         stringeeClient = MainActivity.stringeeClient;
-
 
 
     }

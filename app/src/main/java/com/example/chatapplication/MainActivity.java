@@ -270,9 +270,7 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onChangeEvent(StringeeChange stringeeChange) {
                 if (stringeeChange.getObjectType() == Message.Type.MESSAGE){
-                    if(stringeeChange.getChangeType() == StringeeChange.Type.INSERT){
                         Log.e("CHANGE ORCUR","STRINGEE");
-                    }
                 }
             }
         });
