@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapplication.Model.Account;
+import com.example.chatapplication.Model.AccountUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +22,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.stringee.StringeeClient;
+import com.stringee.messaging.Conversation;
+import com.stringee.messaging.ConversationOptions;
+import com.stringee.messaging.User;
+import com.stringee.messaging.listeners.CallbackListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +35,10 @@ import java.util.List;
 public class ChatFragment extends Fragment implements RecylerViewChat.OnItemLister {
     private RecyclerView lv;
     private List<Account> list_acc;
-    private List<Account> list_real;
+    public static List<Account> list_real;
     private RecylerViewChat adapter;
     private DatabaseReference mFriendDatabase;
+
 
     public ChatFragment() {
     }
@@ -46,6 +53,8 @@ public class ChatFragment extends Fragment implements RecylerViewChat.OnItemList
         list_acc = new ArrayList<Account>();
         list_real = new ArrayList<>();
         readUsers();
+
+
         return view;
     }
 
@@ -77,9 +86,10 @@ public class ChatFragment extends Fragment implements RecylerViewChat.OnItemList
                                 list_real.add(acc);
                             }
                         }
-                        System.out.println(list_real);
                         adapter = new RecylerViewChat(getActivity(), list_real, ChatFragment.this);
                         lv.setAdapter(adapter);
+
+
                     }
 
                     @Override

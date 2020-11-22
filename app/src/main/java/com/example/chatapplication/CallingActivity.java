@@ -38,9 +38,9 @@ public class CallingActivity extends AppCompatActivity {
         receiver = findViewById(R.id.receiver_camera);
         usercall = findViewById(R.id.usercall);
         onmic = findViewById(R.id.onmic);
-        offmic = findViewById(R.id.onmic);
-        onvolume = findViewById(R.id.onmic);
-        offvolume = findViewById(R.id.onmic);
+        offmic = findViewById(R.id.offmic);
+        onvolume = findViewById(R.id.onvolume);
+        offvolume = findViewById(R.id.offvolume);
         motionLayout = findViewById(R.id.motioncalling);
 
         accept.setOnClickListener(new View.OnClickListener() {

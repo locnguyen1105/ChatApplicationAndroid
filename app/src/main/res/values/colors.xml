@@ -7,5 +7,6 @@
     <color name="white">#FFFFFF</color>
     <color name="colorbar1">#3760F1</color>
     <color name="bgCover">#5B5C4C4D</color>
+    <color name="maincolor">#E0565B</color>
 
 </resources>

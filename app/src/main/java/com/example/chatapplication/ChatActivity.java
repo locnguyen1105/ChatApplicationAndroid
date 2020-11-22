@@ -3,14 +3,12 @@ package com.example.chatapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,7 +18,6 @@ import android.widget.Toast;
 
 import com.example.chatapplication.Model.Account;
 import com.example.chatapplication.Model.Chat;
-import com.example.chatapplication.Stringee.GenAccessToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,9 +27,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.stringee.StringeeClient;
-import com.stringee.call.StringeeCall;
-import com.stringee.exception.StringeeError;
-import com.stringee.listener.StringeeConnectionListener;
+import com.stringee.listener.StatusListener;
+import com.stringee.messaging.Conversation;
+import com.stringee.messaging.ConversationOptions;
+import com.stringee.messaging.Message;
+import com.stringee.messaging.StringeeChange;
+import com.stringee.messaging.User;
+import com.stringee.messaging.listeners.CallbackListener;
+import com.stringee.messaging.listeners.ChangeEventListenter;
 
 import org.json.JSONObject;
 
@@ -47,6 +49,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 //GenAccessToken.genAccessToken("SKfbWu6u2A8CfUckQZDNlbLC9TKvTa5oU", "TzNCaAlJac3NWUVROd2ZPNE9PTEc1Mk9iZVI0QW5NQ0E=", 360000)
 public class ChatActivity extends AppCompatActivity implements RecylerViewMessage.OnItemLister {
+    private String token;
+
     private CircleImageView imageView;
     private ImageView phone,camera;
     private TextView textView;
@@ -60,6 +64,9 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
     private RecyclerView recyclerView;
     private RecylerViewMessage adapter;
     List<Chat> list_chat;
+    StringeeClient stringeeClient;
+    ConversationOptions options;
+    List<User> userList;
 
 
 
@@ -81,6 +88,8 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        userList = new ArrayList<>();
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -89,12 +98,24 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
             @Override
             public void onClick(View v) {
                 String msg = editText.getText().toString();
-                if(!"".equals(msg)){
-                    sendMessage(firebaseUser.getUid(),receiver.getUid(),msg);
-                    editText.setText("");
-                }else{
 
-                }
+                stringeeClient.createConversation( userList, options, new CallbackListener<Conversation>() {
+                    @Override
+                    public void onSuccess(Conversation conversation) {
+                        Message message = new Message(msg);
+                        conversation.sendMessage(stringeeClient, message, new StatusListener() {
+                            @Override
+                            public void onSuccess() {
+                                if(!"".equals(msg)){
+                                    sendMessage(firebaseUser.getUid(),receiver.getUid(),msg);
+                                    editText.setText("");
+                                }else{
+
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -152,6 +173,35 @@ public class ChatActivity extends AppCompatActivity implements RecylerViewMessag
                 startActivity(intent);
             }
         });
+
+        // string ee chat
+        stringeeClient = MainActivity.stringeeClient;
+
+        stringeeClient.getLocalConversations(acc_id, new CallbackListener<List<Conversation>>() {
+            @Override
+            public void onSuccess(final List<Conversation> conversations) {
+                System.out.println(conversations);
+            }
+        });
+
+
+        //Stringee
+        for(Account acc : ChatFragment.list_real){
+            User user = new User(acc.getUid());
+            user.setName(acc.getUsername());
+            user.setAvatarUrl(acc.getImage());
+            user.setRole("member");
+            userList.add(user);
+        }
+
+        options = new ConversationOptions();
+        options.setName("Chat App");
+        options.setGroup(false);
+        options.setDistinct(true);
+        stringeeClient = MainActivity.stringeeClient;
+
+
+
     }
 
 

@@ -6,11 +6,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -38,7 +40,6 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        Log.e("aa","aaa");
         if (remoteMessage.getData().size() > 0) {
             Log.d("Stringee", "Message data payload: " + remoteMessage.getData());
             String pushFromStringee = remoteMessage.getData().get("stringeePushNotification");
@@ -57,9 +58,50 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
                 }
 
             }
+        }else {
+
+            Log.e("FIREBASEMESS","Mess");
+            sendNotification(remoteMessage.getNotification().getBody());
+
         }
 
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void sendNotification(String messageBody) {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        String channelId = getString(R.string.project_id);
+
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, channelId)
+                        .setSmallIcon(R.drawable.ic_icon)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background))
+                        .setContentTitle(getString(R.string.project_id))
+                        .setContentText(messageBody)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setPriority(NotificationManager.IMPORTANCE_HIGH);
+
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        notificationManager.notify(0, notificationBuilder.build());
     }
 
     private void showNotification() {
@@ -76,11 +118,13 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
 
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANEL_ID)
-                .setSmallIcon(R.mipmap.ic_logo)
+                .setSmallIcon(R.drawable.ic_icon)
                 .setContentTitle("Incoming call from AlarME")
                 .setContentIntent(pendingIntent)
+                .setSound(defaultSoundUri)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
@@ -88,4 +132,6 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
 
         notificationManager.notify(1,notification);
     }
+
+
 }

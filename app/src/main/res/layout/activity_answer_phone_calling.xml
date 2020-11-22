@@ -25,28 +25,73 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/onmic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_mic"
+            android:background="@drawable/border_call"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageButton
+            android:id="@+id/offmic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border_call"
+            android:src="@drawable/ic_offmic"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"
+            />
 
         <ImageButton
             android:id="@+id/cancelphonecalling"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/offvolume"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border_call"
+            android:src="@drawable/ic_offvolume"
             android:visibility="gone"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageButton
+            android:id="@+id/onvolume"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border_call"
+            android:src="@drawable/ic_volume"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            />
+
 
         <ImageButton
             android:id="@+id/rejectphonecalling"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/btn_endcall"
+            android:src="@drawable/ic_acceptphone"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center_horizontal"/>
 
         <ImageButton
             android:id="@+id/acceptphonecalling"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/phone_icon" />
+            android:layout_marginLeft="20dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/acceptcallborder"
+            android:src="@drawable/ic_cancelphone"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 </androidx.constraintlayout.motion.widget.MotionLayout>

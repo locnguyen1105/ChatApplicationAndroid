@@ -46,35 +46,52 @@
 
         <ImageButton
             android:id="@+id/onmic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_mic_24"
-            android:visibility="gone" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_mic"
+            android:background="@drawable/border_call"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            />
 
         <ImageButton
             android:id="@+id/offmic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/stat_notify_call_mute" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border_call"
+            android:src="@drawable/ic_offmic"
+            android:layout_gravity="center_vertical"
+
+            />
         <ImageButton
             android:id="@+id/cancelphonecalling"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/btn_endcall"
             android:elevation="5dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+            android:src="@drawable/ic_endcall"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            />
 
         <ImageButton
             android:id="@+id/offvolume"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_volume_off_24" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border_call"
+            android:src="@drawable/ic_offvolume"
+            android:layout_gravity="center_vertical"
+            />
 
         <ImageButton
             android:id="@+id/onvolume"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_volume_up_24"
-            android:visibility="gone" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border_call"
+            android:src="@drawable/ic_volume"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            />
 
 
     </LinearLayout>

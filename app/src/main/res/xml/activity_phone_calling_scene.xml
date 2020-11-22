@@ -18,7 +18,7 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_marginBottom="0dp"
-            motion:layout_constraintBottom_toTopOf="@+id/cancelphone"
+            motion:layout_constraintBottom_toTopOf="@+id/linear"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             android:id="@+id/avatarphone" />
@@ -28,11 +28,18 @@
         <Constraint
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             android:id="@+id/avatarphone"
             motion:layout_constraintBottom_toTopOf="@+id/cancelphone"
             android:layout_marginBottom="340dp" />
+        <Constraint
+            android:layout_height="0dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:id="@+id/linear"
+            motion:layout_constraintBottom_toBottomOf="parent" />
     </ConstraintSet>
 </MotionScene>

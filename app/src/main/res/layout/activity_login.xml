@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:text="Login"
             android:layout_height="wrap_content"
-            android:background="#E0565B"></Button>
+            android:background="@drawable/border_mainbutton"></Button>
 
         <TextView
             android:id="@+id/forgot"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="Forgot Password?"
             android:gravity="right"
-            android:textColor="@color/colorPrimary"></TextView>
+            android:textColor="@color/maincolor"></TextView>
     </LinearLayout>
 
     <LinearLayout
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Regiter"
-            android:background="#E0565B">
+            android:background="@drawable/border_mainbutton">
 
         </Button>
 

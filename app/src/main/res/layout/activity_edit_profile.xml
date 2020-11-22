@@ -9,7 +9,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/maincolor">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar1"
@@ -160,9 +161,9 @@
                 android:id="@+id/update_profile"
                 android:text="Update Infomation"
                 android:textSize="20dp"
-                android:textColor="@color/colorbar1"
+                android:textColor="@color/white"
                 android:textStyle="bold"
-                android:background="@drawable/rounded_image"
+                android:background="@drawable/border_mainbutton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

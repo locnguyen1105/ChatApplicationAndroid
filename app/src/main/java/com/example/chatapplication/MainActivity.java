@@ -18,7 +18,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.chatapplication.Stringee.GenAccessToken;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,11 +29,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
 import com.stringee.exception.StringeeError;
 import com.stringee.listener.StatusListener;
 import com.stringee.listener.StringeeConnectionListener;
+import com.stringee.messaging.Message;
+import com.stringee.messaging.StringeeChange;
+import com.stringee.messaging.StringeeObject;
+import com.stringee.messaging.listeners.ChangeEventListenter;
 
 import org.json.JSONObject;
 
@@ -70,6 +77,25 @@ public class MainActivity extends AppCompatActivity  {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        //String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d("TAG", token);
+                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         Query query = databaseReference.orderByChild("Email").equalTo(firebaseUser.getEmail());
 
@@ -238,6 +264,16 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onTopicMessage(String s, JSONObject jsonObject) {
 
+            }
+        });
+        stringeeClient.setChangeEventListenter(new ChangeEventListenter() {
+            @Override
+            public void onChangeEvent(StringeeChange stringeeChange) {
+                if (stringeeChange.getObjectType() == Message.Type.MESSAGE){
+                    if(stringeeChange.getChangeType() == StringeeChange.Type.INSERT){
+                        Log.e("CHANGE ORCUR","STRINGEE");
+                    }
+                }
             }
         });
         stringeeClient.connect(token);

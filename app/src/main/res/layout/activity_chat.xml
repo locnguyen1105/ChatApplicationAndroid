@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/maincolor">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -38,23 +39,28 @@
                     android:layout_gravity="center_vertical"
                     android:text="Accname"
                     android:textSize="25sp"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:textColor="@color/white"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
                     <ImageView
                         android:id="@+id/phone"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:srcCompat="@android:drawable/stat_sys_phone_call"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        app:srcCompat="@drawable/ic_phone"
+                        android:layout_marginRight="10dp"
                         />
 
                     <ImageView
                         android:id="@+id/camera"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:srcCompat="@android:drawable/ic_menu_camera"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center_vertical"
+                        app:srcCompat="@drawable/ic_cmr"
+                        android:layout_marginRight="10dp"
                         />
                 </LinearLayout>
             </LinearLayout>
@@ -87,5 +93,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/message"
-        app:srcCompat="@android:drawable/ic_menu_send" />
+        app:srcCompat="@drawable/ic_send"
+        android:background="@null"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
